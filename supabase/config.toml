@@ -1,0 +1,28 @@
+# Supabase CLI Configuration
+project_id = "byxnkwxmpindjqvdyalf"
+
+[api]
+port = 54321
+schema = "public"
+extra_search_path = ["public", "extensions"]
+
+[db]
+port = 54322
+shadow_port = 54320
+
+[studio]
+port = 54323
+
+[ingest]
+port = 54324
+
+[storage]
+file_size_limit = "5 MiB"
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://byxnkwxmpindjqvdyalf.supabase.co/auth/v1/callback"]
+jwt_expiry = 3600
+
+[analytics]
+enabled = false

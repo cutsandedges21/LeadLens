@@ -1,0 +1,66 @@
+<h2>Dashboard Layout Overview</h2>
+<p class="subtitle">Supabase-style layout with left sidebar navigation and main content area</p>
+
+<div class="mockup">
+  <div class="mockup-header">Logged-in Dashboard Structure</div>
+  <div class="mockup-body" style="display: flex; height: 500px; border: 2px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+
+    <!-- Left Sidebar -->
+    <div style="width: 200px; background: #1e293b; color: white; padding: 16px; display: flex; flex-direction: column;">
+      <div style="font-weight: bold; font-size: 18px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #334155;">
+        LeadLens
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="padding: 10px 12px; background: #3b82f6; border-radius: 6px; font-size: 14px;">Dashboard</div>
+        <div style="padding: 10px 12px; border-radius: 6px; font-size: 14px; opacity: 0.7;">Audits</div>
+        <div style="padding: 10px 12px; border-radius: 6px; font-size: 14px; opacity: 0.7;">Analytics</div>
+        <div style="padding: 10px 12px; border-radius: 6px; font-size: 14px; opacity: 0.7;">Settings</div>
+        <div style="padding: 10px 12px; border-radius: 6px; font-size: 14px; opacity: 0.7;">Help</div>
+      </div>
+
+      <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid #334155;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+          <div style="width: 32px; height: 32px; background: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">JD</div>
+          <div>
+            <div style="font-weight: 500;">John Doe</div>
+            <div style="font-size: 12px; opacity: 0.7;">john@company.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div style="flex: 1; background: #f8fafc; padding: 24px; overflow-y: auto;">
+      <div style="background: white; border-radius: 8px; padding: 20px; border: 1px solid #e5e7eb; margin-bottom: 16px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 18px;">Recent Audit Summary</h3>
+        <p style="margin: 0; color: #64748b; font-size: 14px;">Latest analysis results and quick actions</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
+          <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Overall Score</div>
+          <div style="font-size: 32px; font-weight: bold; color: #3b82f6;">67%</div>
+        </div>
+        <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
+          <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Total Audits</div>
+          <div style="font-size: 32px; font-weight: bold; color: #10b981;">12</div>
+        </div>
+        <div style="background: white; border-radius: 8px; padding: 16px; border: 1px solid #e5e7eb;">
+          <div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">Avg. Score</div>
+          <div style="font-size: 32px; font-weight: bold; color: #f59e0b;">54%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Left Sidebar:</strong> Fixed navigation with 5 tabs, profile at bottom</li>
+    <li><strong>Main Content:</strong> Scrollable area with responsive layouts</li>
+    <li><strong>Color Scheme:</strong> Dark sidebar (#1e293b) with light content area (#f8fafc)</li>
+    <li><strong>Mobile Ready:</strong> Collapsible sidebar for future mobile app</li>
+  </ul>
+</div>
