@@ -2,136 +2,114 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Settings, CreditCard, LogOut, ChevronDown } from 'lucide-react';
+import { Settings, CreditCard, LogOut, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 
+const planLabels: Record<string, string> = {
+  free: 'Free',
+  starter: 'Starter',
+  pro: 'Pro',
+  enterprise: 'Enterprise',
+};
+
+const planColors: Record<string, string> = {
+  free: 'text-muted-foreground',
+  starter: 'text-brand',
+  pro: 'text-violet-500',
+  enterprise: 'text-amber-500',
+};
+
 export function ProfileDisplay() {
   const { user, pricingPlan, signOut } = useAuth();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const planColors = {
-    free: 'text-gray-400',
-    starter: 'text-blue-400',
-    pro: 'text-purple-400',
-    enterprise: 'text-orange-400',
-  };
-
-  const planLabels = {
-    free: 'Free',
-    starter: 'Starter',
-    pro: 'Pro',
-    enterprise: 'Enterprise',
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
   if (!user) {
-    // Show sign up and contact sales buttons when not authenticated
     return (
-      <div className="flex items-center gap-4">
-        <Link href="/auth">
-          <Button
-            variant="ghost"
-            className="font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all"
-          >
-            Sign Up
+      <div className="flex w-full items-center gap-2 md:w-auto">
+        <Link href="/auth" className="flex-1 md:flex-none">
+          <Button variant="ghost" className="w-full md:w-auto">
+            Sign in
           </Button>
         </Link>
-        <Link href="/contact">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Button
-              className="animate-cycle-colors text-white hover:opacity-90 rounded-full px-6 font-bold shadow-lg transition-all"
-              style={{
-                backgroundImage: 'linear-gradient(90deg, #fb923c, #ec4899, #3b82f6, #fb923c)',
-              }}
-            >
-              Contact Sales
-            </Button>
-          </motion.div>
+        <Link href="/auth" className="flex-1 md:flex-none">
+          <Button className="w-full md:w-auto">Start free</Button>
         </Link>
       </div>
     );
   }
 
-  const fullName = user.user_metadata?.full_name || user.email;
-  const currentPlan = pricingPlan;
+  const fullName = user.user_metadata?.full_name || user.email || 'Account';
+  const initial = fullName.charAt(0).toUpperCase();
 
   return (
-    <div className="relative">
-      <motion.button
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-accent transition-colors group"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+    <div className="relative w-full md:w-auto">
+      <button
+        onClick={() => setIsOpen((v) => !v)}
+        className="flex w-full items-center gap-2.5 rounded-full border border-border bg-card px-2 py-1.5 transition-colors hover:bg-accent md:w-auto"
       >
-        <div className="w-8 h-8 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-          {fullName.charAt(0).toUpperCase()}
-        </div>
-        <span className="font-medium text-foreground">{fullName}</span>
-        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
-      </motion.button>
+        <span className="flex size-8 items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background">
+          {initial}
+        </span>
+        <span className="hidden text-sm font-medium text-foreground sm:block">
+          {fullName.split(' ')[0]}
+        </span>
+        <ChevronDown
+          className={`size-4 text-muted-foreground transition-transform ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
 
-      {/* Hover tooltip for pricing plan */}
-      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-3 py-1 bg-secondary border border-border rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-        <span className={planColors[currentPlan]}>Current Plan: {planLabels[currentPlan]}</span>
-      </div>
-
-      {/* Dropdown menu */}
       <AnimatePresence>
-        {isDropdownOpen && (
+        {isOpen && (
           <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsDropdownOpen(false)}
+            <div
+              onClick={() => setIsOpen(false)}
               className="fixed inset-0 z-40"
             />
             <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-              className="absolute right-0 top-full mt-2 w-56 bg-card border border-border rounded-xl shadow-2xl z-50 overflow-hidden"
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ duration: 0.16 }}
+              className="absolute right-0 top-full z-50 mt-2 w-60 overflow-hidden rounded-2xl border border-border bg-popover shadow-xl"
             >
-              <div className="p-2">
-                <Link
-                  href="/pricing"
-                  onClick={() => setIsDropdownOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-sm"
-                >
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <span>Current Plan: Starter</span>
-                </Link>
+              <div className="border-b border-border px-4 py-3">
+                <p className="truncate text-sm font-medium text-foreground">
+                  {fullName}
+                </p>
+                <p className={`text-xs font-medium ${planColors[pricingPlan]}`}>
+                  {planLabels[pricingPlan]} plan
+                </p>
+              </div>
+              <div className="p-1.5">
                 <Link
                   href="/settings"
-                  onClick={() => setIsDropdownOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-sm"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-foreground transition-colors hover:bg-accent"
                 >
-                  <Settings className="w-4 h-4 text-muted-foreground" />
-                  <span>Settings</span>
+                  <Settings className="size-4 text-muted-foreground" />
+                  Settings
                 </Link>
                 <Link
                   href="/pricing"
-                  onClick={() => setIsDropdownOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-sm"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-foreground transition-colors hover:bg-accent"
                 >
-                  <CreditCard className="w-4 h-4 text-muted-foreground" />
-                  <span>Upgrade Plan</span>
+                  <CreditCard className="size-4 text-muted-foreground" />
+                  Upgrade plan
                 </Link>
-                <div className="border-t border-border my-2" />
                 <button
                   onClick={() => {
                     signOut();
-                    setIsDropdownOpen(false);
+                    setIsOpen(false);
                   }}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors text-sm w-full text-left"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-foreground transition-colors hover:bg-accent"
                 >
-                  <LogOut className="w-4 h-4 text-muted-foreground" />
-                  <span>Sign Out</span>
+                  <LogOut className="size-4 text-muted-foreground" />
+                  Sign out
                 </button>
               </div>
             </motion.div>

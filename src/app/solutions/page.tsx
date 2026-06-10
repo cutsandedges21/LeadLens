@@ -1,150 +1,102 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Building2, Users, ShoppingCart, ArrowRight } from 'lucide-react';
+import { Rocket, Megaphone, Briefcase, Clapperboard, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
-const solutions = [
+const personas = [
   {
-    icon: Building2,
-    name: 'For Agencies',
-    description: 'Close more clients by running free audits on their infrastructure. Hand them a 40/100 score and tell them exactly how your agency will fix it.',
-    color: 'from-orange-400 to-pink-500',
-    borderColor: 'border-orange-500/50',
+    Icon: Rocket,
+    title: 'Founders',
+    body: 'You don’t have a CRO team. LeadLens is the next best thing — a focused list of what to fix before you spend more on traffic.',
+    points: ['Validate a landing page in minutes', 'Prioritize before you redesign', 'Spend dev time where it pays back'],
   },
   {
-    icon: Users,
-    name: 'For Creators',
-    description: 'You have traffic but no conversions. Our AI analyzes your funnel to turn passive followers into newsletter subscribers and paid community members.',
-    color: 'from-pink-500 to-purple-500',
-    borderColor: 'border-pink-500/50',
+    Icon: Megaphone,
+    title: 'Marketers',
+    body: 'Stop guessing why a campaign underperforms. See the on-page reasons conversions leak — and exactly how to plug them.',
+    points: ['Audit every campaign landing page', 'Back recommendations with impact', 'Report wins with before/after scores'],
   },
   {
-    icon: ShoppingCart,
-    name: 'For E-Com Brands',
-    description: 'Stop abandoning carts. We identify UX friction in your checkout flow and missing trust signals that are costing you thousands daily.',
-    color: 'from-emerald-500 to-teal-500',
-    borderColor: 'border-emerald-500/50',
+    Icon: Briefcase,
+    title: 'Agencies',
+    body: 'Walk into every pitch with a credible, specific audit. Show prospects what’s costing them money before you’ve signed.',
+    points: ['Instant audits for pitches', 'Consistent, branded reports', 'Multi-client tracking'],
+  },
+  {
+    Icon: Clapperboard,
+    title: 'Creators',
+    body: 'Conversion isn’t only a website thing. Point LeadLens at your YouTube channel or Instagram profile and grow what matters.',
+    points: ['Audit YouTube & Instagram', 'Sharpen your profile and CTAs', 'Turn views into followers and sales'],
   },
 ];
 
 export default function SolutionsPage() {
   return (
-    <div
-      className="min-h-screen py-32 px-4"
-      style={{
-        background: 'linear-gradient(135deg, var(--background) 0%, var(--secondary) 50%, var(--background) 100%)',
-      }}
-    >
-      {/* Background floating shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: '10%',
-            top: '20%',
-            backgroundColor: 'rgba(255, 107, 107, 0.15)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            y: [0, -40, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '250px',
-            height: '250px',
-            right: '15%',
-            bottom: '30%',
-            backgroundColor: 'rgba(78, 205, 196, 0.15)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </div>
-
-      <div className="container mx-auto max-w-6xl relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter text-foreground">
+    <main className="bg-dot-grid">
+      <section className="mx-auto max-w-7xl px-5 pb-16 pt-36 sm:px-8 lg:pt-44">
+        <div className="max-w-3xl">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand">
             Solutions
+          </span>
+          <h1 className="font-editorial mt-4 text-5xl font-bold leading-[1.05] text-foreground sm:text-6xl">
+            Built for everyone who lives or dies by{' '}
+            <span className="italic text-brand">conversion</span>.
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Custom-tailored insights depending on your business model
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Same engine, tuned to your job. Whatever you’re optimizing, LeadLens
+            tells you what to fix first.
           </p>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Solution Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
-          {solutions.map((solution, index) => (
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
+        <div className="grid gap-5 md:grid-cols-2">
+          {personas.map((p, i) => (
             <motion.div
-              key={solution.name}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
+              key={p.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.45, delay: (i % 2) * 0.08 }}
+              className="flex flex-col rounded-3xl border border-border bg-card p-8 shadow-sm"
             >
-              <Card
-                className={`h-full bg-card/80 backdrop-blur-xl border-2 ${solution.borderColor} rounded-3xl p-8 transition-all hover:shadow-2xl hover:scale-105`}
-              >
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <solution.icon className="w-8 h-8 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold mb-4 text-foreground">{solution.name}</h2>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                  {solution.description}
-                </p>
-                <Button
-                  className={`w-full bg-gradient-to-r ${solution.color} text-white hover:opacity-90 font-bold transition-all hover:scale-105`}
-                >
-                  Learn More
-                  <ArrowRight className="ml-2 w-4 h-4" />
-                </Button>
-              </Card>
+              <span className="flex size-12 items-center justify-center rounded-2xl bg-foreground text-background">
+                <p.Icon className="size-5" />
+              </span>
+              <h2 className="mt-5 text-2xl font-semibold text-foreground">
+                {p.title}
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                {p.body}
+              </p>
+              <ul className="mt-5 space-y-2.5">
+                {p.points.map((pt) => (
+                  <li
+                    key={pt}
+                    className="flex items-center gap-2.5 text-sm text-foreground"
+                  >
+                    <span className="size-1.5 rounded-full bg-brand" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
             </motion.div>
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-20 text-center"
-        >
-          <Link href="/">
-            <Button
-              variant="outline"
-              className="bg-card/80 backdrop-blur-sm border-2 border-border text-foreground hover:bg-accent px-8 py-4 rounded-full font-bold transition-all hover:scale-105"
-            >
-              ← Back to Home
+        <div className="mt-14 flex flex-col items-center gap-3 text-center">
+          <Link href="/auth">
+            <Button size="lg">
+              Run your first audit <ArrowRight className="size-4" />
             </Button>
           </Link>
-        </motion.div>
-      </div>
-    </div>
+          <p className="text-sm text-muted-foreground">
+            Free to start · No credit card
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }

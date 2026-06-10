@@ -1,42 +1,69 @@
--- Supabase Schema for LeadLens MVP
+-- Supabase schema for LeadLens
+-- Safe to run multiple times (idempotent). Run in: Supabase Dashboard → SQL Editor.
 
--- Table to store analysis reports
-CREATE TABLE analyses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  url TEXT NOT NULL,
-  platform TEXT NOT NULL,
-  report JSONB NOT NULL,
-  email TEXT, -- This gets updated when the lead is captured
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+create extension if not exists pgcrypto;
+
+-- ============================================================
+-- analyses: one row per audit (website / instagram / youtube)
+-- ============================================================
+create table if not exists public.analyses (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid references auth.users (id) on delete set null,
+  url         text not null,
+  platform    text not null,
+  report      jsonb not null,
+  email       text,                 -- set when a lead is captured
+  created_at  timestamptz not null default timezone('utc', now())
 );
 
--- Index for faster lookups when capturing lead
-CREATE INDEX idx_analyses_id ON analyses(id);
+-- The dashboard filters audits by the signed-in user.
+create index if not exists idx_analyses_user_id on public.analyses (user_id);
+create index if not exists idx_analyses_created_at on public.analyses (created_at desc);
 
--- Optional Table for leads if you want them separated
-CREATE TABLE leads (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email TEXT NOT NULL,
-  analysis_id UUID REFERENCES analyses(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+-- ============================================================
+-- leads: email captured against an analysis
+-- ============================================================
+create table if not exists public.leads (
+  id           uuid primary key default gen_random_uuid(),
+  email        text not null,
+  analysis_id  uuid references public.analyses (id) on delete set null,
+  created_at   timestamptz not null default timezone('utc', now())
 );
 
--- Table for users who opt into automated marketing emails
-CREATE TABLE marketing_emails (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email TEXT UNIQUE NOT NULL,
-  opted_in_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+-- ============================================================
+-- marketing_emails: opt-ins
+-- ============================================================
+create table if not exists public.marketing_emails (
+  id           uuid primary key default gen_random_uuid(),
+  email        text unique not null,
+  opted_in_at  timestamptz not null default timezone('utc', now())
 );
 
--- Set Row Level Security (RLS) policies
-ALTER TABLE analyses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
-ALTER TABLE marketing_emails ENABLE ROW LEVEL SECURITY;
+-- ============================================================
+-- Row Level Security
+-- MVP policies are permissive (the anonymous audit + email-gate flow runs
+-- before sign-in). Tighten these before production.
+-- ============================================================
+alter table public.analyses        enable row level security;
+alter table public.leads           enable row level security;
+alter table public.marketing_emails enable row level security;
 
--- Allow public inserts and reads for MVP (In production, restrict to authenticated service role / API)
-CREATE POLICY "Allow public insert on analyses" ON analyses FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public read on analyses" ON analyses FOR SELECT USING (true);
-CREATE POLICY "Allow public update on analyses" ON analyses FOR UPDATE USING (true);
+drop policy if exists "analyses_insert_public" on public.analyses;
+create policy "analyses_insert_public" on public.analyses
+  for insert with check (true);
 
-CREATE POLICY "Allow public insert on leads" ON leads FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public insert on marketing_emails" ON marketing_emails FOR INSERT WITH CHECK (true);
+drop policy if exists "analyses_select_public" on public.analyses;
+create policy "analyses_select_public" on public.analyses
+  for select using (true);
+
+drop policy if exists "analyses_update_public" on public.analyses;
+create policy "analyses_update_public" on public.analyses
+  for update using (true);
+
+drop policy if exists "leads_insert_public" on public.leads;
+create policy "leads_insert_public" on public.leads
+  for insert with check (true);
+
+drop policy if exists "marketing_emails_insert_public" on public.marketing_emails;
+create policy "marketing_emails_insert_public" on public.marketing_emails
+  for insert with check (true);

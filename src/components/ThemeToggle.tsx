@@ -27,37 +27,35 @@ export function ThemeToggle() {
       >
         <Button
           variant="outline"
-          size="icon"
+          size="icon-lg"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          className="w-14 h-14 rounded-full shadow-2xl bg-background/80 backdrop-blur-xl border-border hover:bg-accent transition-all duration-300 group overflow-hidden"
+          className="size-12 rounded-full border-border bg-card/90 shadow-lg backdrop-blur-xl transition-all duration-300 hover:bg-accent"
+          aria-label="Toggle theme"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {theme === 'dark' ? (
-              <motion.div
+              <motion.span
                 key="moon"
-                initial={{ y: 20, opacity: 0, rotate: -45 }}
+                initial={{ y: 16, opacity: 0, rotate: -30 }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
-                exit={{ y: -20, opacity: 0, rotate: 45 }}
-                transition={{ duration: 0.2 }}
+                exit={{ y: -16, opacity: 0, rotate: 30 }}
+                transition={{ duration: 0.18 }}
               >
-                <Moon className="w-6 h-6 text-blue-400 fill-blue-400" />
-              </motion.div>
+                <Moon className="size-5 text-brand" />
+              </motion.span>
             ) : (
-              <motion.div
+              <motion.span
                 key="sun"
-                initial={{ y: 20, opacity: 0, rotate: -45 }}
+                initial={{ y: 16, opacity: 0, rotate: -30 }}
                 animate={{ y: 0, opacity: 1, rotate: 0 }}
-                exit={{ y: -20, opacity: 0, rotate: 45 }}
-                transition={{ duration: 0.2 }}
+                exit={{ y: -16, opacity: 0, rotate: 30 }}
+                transition={{ duration: 0.18 }}
               >
-                <Sun className="w-6 h-6 text-orange-500 fill-orange-500" />
-              </motion.div>
+                <Sun className="size-5 text-foreground" />
+              </motion.span>
             )}
           </AnimatePresence>
           <span className="sr-only">Toggle theme</span>
-          
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         </Button>
       </motion.div>
     </div>

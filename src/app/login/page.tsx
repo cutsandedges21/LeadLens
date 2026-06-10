@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Mail, Lock, ArrowRight, ArrowLeft, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Brandmark, Wordmark } from '@/components/Brandmark';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const analysisId = searchParams.get('analysisId');
@@ -16,7 +21,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [agreeMarketing, setAgreeMarketing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,109 +28,106 @@ export default function LoginPage() {
     if (emailParam) setEmail(emailParam);
   }, [emailParam]);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
-
     try {
-      // Authenticate with Supabase
       const { error: authError } = await signIn(email, password);
-
       if (authError) {
         setError('Invalid email or password. Please try again.');
         return;
       }
-
-      if (agreeMarketing) {
-        await fetch('/api/marketing', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, agreed: true }),
-        });
-      }
-
-      // Redirect to results if there's an analysisId, otherwise use returnUrl or go to dashboard
-      if (analysisId) {
-        router.push(`/results?analysisId=${analysisId}&email=${encodeURIComponent(email)}`);
-      } else if (returnUrl) {
-        router.push(returnUrl);
-      } else {
-        router.push('/dashboard');
-      }
-    } catch (err: any) {
-      setError('An error occurred during login. Please try again.');
+      setTimeout(() => {
+        if (analysisId) {
+          router.push(`/results?analysisId=${analysisId}&email=${encodeURIComponent(email)}`);
+        } else if (returnUrl) {
+          router.push(returnUrl);
+        } else {
+          router.push('/dashboard');
+        }
+      }, 700);
+    } catch {
+      setError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-10">
-          <div className="w-12 h-12 bg-foreground text-background rounded-xl mx-auto flex items-center justify-center font-black text-2xl mb-6 shadow-xl">
-            LL
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2 text-foreground">Welcome Back</h1>
-          <p className="text-muted-foreground">Log in to view your audit results.</p>
+    <div className="flex min-h-screen items-center justify-center bg-dot-grid px-5 py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
+      >
+        <div className="mb-8 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Brandmark className="size-9" />
+            <Wordmark />
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="size-4" /> Home
+          </Link>
         </div>
 
-        <Card className="bg-card border-border shadow-2xl">
-          <CardContent className="p-8">
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-2">Email Address</label>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-purple-500 transition-colors"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-muted-foreground mb-2">Password</label>
-                <input 
-                  type="password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-secondary border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-purple-500 transition-colors"
-                  required
-                />
-              </div>
+        <div className="rounded-3xl border border-border bg-card p-8 shadow-sm">
+          <h1 className="font-editorial text-3xl font-bold text-foreground">
+            Welcome back
+          </h1>
+          <p className="mt-1.5 text-muted-foreground">
+            Sign in to continue to your dashboard.
+          </p>
 
-              <div className="flex items-start gap-3 p-4 bg-secondary/50 border border-border rounded-xl">
-                <div className="flex items-center h-5">
-                  <input
-                    id="marketing"
-                    type="checkbox"
-                    checked={agreeMarketing}
-                    onChange={(e) => setAgreeMarketing(e.target.checked)}
-                    className="w-4 h-4 rounded border-border bg-card text-purple-600 focus:ring-purple-600 focus:ring-offset-background"
-                  />
-                </div>
-                <div className="text-sm">
-                  <label htmlFor="marketing" className="font-medium text-foreground/80">
-                    I agree to receive automated email advertisements.
-                  </label>
-                  <p className="text-muted-foreground mt-1">We'll send you optimization tips and product updates. You can unsubscribe at any time.</p>
-                </div>
+          <form onSubmit={handleSignIn} className="mt-7 space-y-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="email">Email address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground/60" />
+                <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" className="pl-11" />
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 size-4.5 -translate-y-1/2 text-muted-foreground/60" />
+                <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="pl-11" />
+              </div>
+            </div>
 
-              {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
+            {error && (
+              <p className="flex items-center gap-2 rounded-xl bg-destructive/10 px-3.5 py-2.5 text-sm font-medium text-destructive">
+                <AlertCircle className="size-4 shrink-0" />
+                {error}
+              </p>
+            )}
 
-              <Button 
-                type="submit" 
-                disabled={isSubmitting}
-                className="w-full bg-foreground text-background hover:bg-foreground/90 py-6 rounded-xl font-bold text-lg shadow-xl transition-all"
-              >
-                {isSubmitting ? 'Authenticating...' : 'Sign In & View Report'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+            <Button type="submit" size="lg" disabled={isSubmitting} className="w-full">
+              {isSubmitting ? 'Signing in…' : 'Sign in'}
+              {!isSubmitting && <ArrowRight className="size-4" />}
+            </Button>
+          </form>
+
+          <p className="mt-6 text-center text-sm text-muted-foreground">
+            New to LeadLens?{' '}
+            <Link href="/auth" className="font-medium text-brand hover:underline">
+              Create an account
+            </Link>
+          </p>
+        </div>
+      </motion.div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

@@ -1,142 +1,88 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { BookOpen, Code, ArrowRight, Download } from 'lucide-react';
+import { BookOpen, GraduationCap, FileText, LifeBuoy, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
-const resources = [
+const guides = [
   {
-    icon: BookOpen,
-    tag: 'E-BOOK',
-    tagColor: 'text-purple-500',
-    name: 'The 2026 Conversion Handbook',
-    description: 'Learn how the top 1% of YC startups structure their landing pages for maximum lead capture.',
-    color: 'from-purple-500 to-pink-500',
+    Icon: GraduationCap,
+    tag: 'Guide',
+    title: 'The 7 conversion leaks on almost every landing page',
+    body: 'The patterns LeadLens flags most often — and how to fix each one.',
   },
   {
-    icon: Code,
-    tag: 'DEVELOPER DOCS',
-    tagColor: 'text-orange-500',
-    name: 'LeadLens API',
-    description: 'Integrate our AI auditor directly into your SaaS product using our REST API.',
-    color: 'from-orange-500 to-red-500',
+    Icon: BookOpen,
+    tag: 'Playbook',
+    title: 'Reading your conversion score',
+    body: 'What the number means, how fixes are ranked, and where to start.',
+  },
+  {
+    Icon: FileText,
+    tag: 'Guide',
+    title: 'Auditing YouTube & Instagram',
+    body: 'How conversion thinking applies beyond the website — and what to change.',
+  },
+  {
+    Icon: LifeBuoy,
+    tag: 'Help',
+    title: 'Getting the most from your first audit',
+    body: 'A short walkthrough from first link to your prioritized fix list.',
   },
 ];
 
 export default function ResourcesPage() {
   return (
-    <div
-      className="min-h-screen py-32 px-4"
-      style={{
-        background: 'linear-gradient(135deg, var(--background) 0%, var(--secondary) 50%, var(--background) 100%)',
-      }}
-    >
-      {/* Background floating shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: '10%',
-            top: '20%',
-            backgroundColor: 'rgba(255, 107, 107, 0.15)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            y: [0, -40, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '250px',
-            height: '250px',
-            right: '15%',
-            bottom: '30%',
-            backgroundColor: 'rgba(78, 205, 196, 0.15)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </div>
-
-      <div className="container mx-auto max-w-4xl relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter text-foreground">
+    <main className="bg-dot-grid">
+      <section className="mx-auto max-w-7xl px-5 pb-16 pt-36 sm:px-8 lg:pt-44">
+        <div className="max-w-3xl">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand">
             Resources
+          </span>
+          <h1 className="font-editorial mt-4 text-5xl font-bold leading-[1.05] text-foreground sm:text-6xl">
+            Learn to find — and fix — what converts.
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            The ultimate database of CRO knowledge, case studies, and engineering docs
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Short, practical guides on conversion, written the same way LeadLens
+            gives advice: specific and free of fluff.
           </p>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Resource Cards */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {resources.map((resource, index) => (
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
+        <div className="grid gap-5 md:grid-cols-2">
+          {guides.map((g, i) => (
             <motion.div
-              key={resource.name}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
+              key={g.title}
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.45, delay: (i % 2) * 0.08 }}
             >
-              <Card className="h-full bg-card/80 backdrop-blur-xl border-2 border-border rounded-2xl p-8 transition-all hover:shadow-2xl hover:scale-105 cursor-pointer group">
-                <div className="text-sm font-bold mb-2">{resource.tag}</div>
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center mb-4 shadow-lg">
-                  <resource.icon className="w-6 h-6 text-white" />
+              <Link
+                href="/contact"
+                className="group flex h-full flex-col rounded-3xl border border-border bg-card p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-secondary text-foreground">
+                    <g.Icon className="size-5" />
+                  </span>
+                  <ArrowUpRight className="size-5 text-muted-foreground transition-colors group-hover:text-brand" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-foreground">{resource.name}</h3>
-                <p className="text-muted-foreground mb-6">{resource.description}</p>
-                <Button
-                  className={`w-full bg-gradient-to-r ${resource.color} text-white hover:opacity-90 font-bold transition-all hover:scale-105`}
-                >
-                  Download
-                  <Download className="ml-2 w-4 h-4" />
-                </Button>
-              </Card>
+                <span className="mt-5 text-xs font-semibold uppercase tracking-wider text-brand">
+                  {g.tag}
+                </span>
+                <h2 className="mt-2 text-xl font-semibold leading-snug text-foreground">
+                  {g.title}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {g.body}
+                </p>
+              </Link>
             </motion.div>
           ))}
         </div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-20 text-center"
-        >
-          <Link href="/">
-            <Button
-              variant="outline"
-              className="bg-card/80 backdrop-blur-sm border-2 border-border text-foreground hover:bg-accent px-8 py-4 rounded-full font-bold transition-all hover:scale-105"
-            >
-              ← Back to Home
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }

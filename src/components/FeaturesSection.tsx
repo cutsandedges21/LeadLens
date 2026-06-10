@@ -1,208 +1,168 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useScrollTrigger } from '@/lib/parallax';
-import { TrendingUp, Clock, DollarSign, Shield, Brain, Zap } from 'lucide-react';
+import { TrendingUp, ClipboardCheck, Globe, ArrowUpRight } from 'lucide-react';
+import { YouTubeIcon, InstagramIcon } from '@/components/PlatformIcons';
+
+function RankedVisual() {
+  const rows = [
+    { label: 'Rewrite primary CTA', impact: '+12%', w: '92%' },
+    { label: 'Compress hero image', impact: '+7%', w: '64%' },
+    { label: 'Add testimonials', impact: '+5%', w: '48%' },
+    { label: 'Tighten headline', impact: '+4%', w: '36%' },
+  ];
+  return (
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Prioritized fixes
+      </p>
+      <div className="mt-4 space-y-3">
+        {rows.map((r) => (
+          <div key={r.label} className="space-y-1.5">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-foreground">{r.label}</span>
+              <span className="font-bold text-brand">{r.impact}</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-secondary">
+              <div className="h-full rounded-full bg-brand/70" style={{ width: r.w }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PlaybookVisual() {
+  const items = [
+    'Change button text to “Start free audit”',
+    'Move social proof above the fold',
+    'Reduce form from 6 fields to 3',
+  ];
+  return (
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        Do this next
+      </p>
+      <ul className="mt-4 space-y-3">
+        {items.map((t) => (
+          <li
+            key={t}
+            className="flex items-start gap-3 rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground"
+          >
+            <ClipboardCheck className="mt-0.5 size-4 shrink-0 text-brand" />
+            {t}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function PlatformVisual() {
+  const platforms = [
+    { Icon: Globe, label: 'Website', note: 'Landing pages & funnels' },
+    { Icon: YouTubeIcon, label: 'YouTube', note: 'Channels & video pages' },
+    { Icon: InstagramIcon, label: 'Instagram', note: 'Profiles & posts' },
+  ];
+  return (
+    <div className="rounded-3xl border border-border bg-card p-6 shadow-sm">
+      <div className="space-y-3">
+        {platforms.map((p) => (
+          <div
+            key={p.label}
+            className="flex items-center gap-4 rounded-2xl border border-border bg-background px-4 py-3"
+          >
+            <span className="flex size-10 items-center justify-center rounded-xl bg-secondary text-foreground">
+              <p.Icon className="size-5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-foreground">{p.label}</p>
+              <p className="text-xs text-muted-foreground">{p.note}</p>
+            </div>
+            <ArrowUpRight className="ml-auto size-4 text-muted-foreground" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const features = [
   {
-    icon: TrendingUp,
-    benefit: 'Increase Revenue',
-    impact: 'Convert 47% more visitors',
-    hint: 'AI-powered funnel analysis',
-    color: 'from-orange-400 to-pink-500',
-    stat: '47%',
+    eyebrow: 'Ranked by impact',
+    Icon: TrendingUp,
+    title: 'Every finding tied to revenue, not vibes.',
+    body: 'LeadLens doesn’t hand you a 40-point checklist. It estimates the conversion lift behind each fix and sorts them, so you spend effort where it actually pays back.',
+    visual: <RankedVisual />,
+    reverse: false,
   },
   {
-    icon: Clock,
-    benefit: 'Save Time',
-    impact: 'Automated audits in minutes',
-    hint: 'Intelligent scraping & detection',
-    color: 'from-pink-500 to-blue-500',
-    stat: '10x',
+    eyebrow: 'Clear, do-it-yourself fixes',
+    Icon: ClipboardCheck,
+    title: 'Plain-English changes you can ship today.',
+    body: 'No jargon, no vague “improve UX.” Each recommendation is specific and actionable — exactly what to change and why. You stay in control of what gets done.',
+    visual: <PlaybookVisual />,
+    reverse: true,
   },
   {
-    icon: DollarSign,
-    benefit: 'Maximize ROI',
-    impact: '3.2x average return',
-    hint: 'Data-driven optimization',
-    color: 'from-blue-500 to-cyan-500',
-    stat: '3.2x',
-  },
-  {
-    icon: Shield,
-    benefit: 'Scale Confidently',
-    impact: 'Enterprise-grade insights',
-    hint: 'Advanced analytics platform',
-    color: 'from-cyan-500 to-teal-500',
-    stat: '99.9%',
+    eyebrow: 'One tool, three platforms',
+    Icon: Globe,
+    title: 'Audit websites, YouTube, and Instagram.',
+    body: 'Conversion isn’t only a website problem. Point LeadLens at a channel or profile and get the same impact-ranked guidance, tuned to how that platform converts.',
+    visual: <PlatformVisual />,
+    reverse: false,
   },
 ];
 
 export function FeaturesSection() {
-  const { isVisible, elementRef } = useScrollTrigger(0.1);
-
   return (
-    <section
-      ref={elementRef as any}
-      className="relative py-32 overflow-hidden bg-gradient-to-br from-background via-secondary/10 to-background"
-    >
-      {/* Background floating shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: '5%',
-            top: '10%',
-            backgroundColor: 'rgba(255, 154, 162, 0.2)',
-            filter: 'blur(100px)',
-          }}
-          animate={{
-            y: [0, -50, 0],
-            x: [0, 40, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '250px',
-            height: '250px',
-            right: '10%',
-            bottom: '20%',
-            backgroundColor: 'rgba(78, 205, 196, 0.2)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            y: [0, 40, 0],
-            x: [0, -30, 0],
-            scale: [1, 1.15, 1],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '180px',
-            height: '180px',
-            left: '60%',
-            top: '60%',
-            backgroundColor: 'rgba(255, 206, 86, 0.15)',
-            filter: 'blur(70px)',
-          }}
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 25, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+    <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:py-28">
+      <div className="max-w-2xl">
+        <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+          What you get
+        </span>
+        <h2 className="font-editorial mt-4 text-4xl font-bold leading-tight text-foreground sm:text-5xl">
+          A consultant-grade audit, without the consultant.
+        </h2>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
-          <h2 className="text-5xl md:text-6xl font-black text-foreground mb-6">
-            Business Benefits
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Real results from real companies using LeadLens
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.2 + index * 0.15, duration: 0.8 }}
-                whileHover={{ scale: 1.03 }}
-                className="group"
-              >
-                <div className="bg-card/80 backdrop-blur-xl rounded-3xl p-10 shadow-xl border border-border h-full transition-all duration-300 hover:shadow-2xl relative overflow-hidden">
-                  {/* Background gradient */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}
-                  />
-
-                  {/* Stat badge */}
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={isVisible ? { scale: 1 } : {}}
-                    transition={{ delay: 0.5 + index * 0.15, type: 'spring' }}
-                    className={`absolute top-6 right-6 w-20 h-20 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg`}
-                  >
-                    <span className="text-2xl font-black text-white">{feature.stat}</span>
-                  </motion.div>
-
-                  <div
-                    className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-8 shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <Icon className="w-10 h-10 text-white" />
-                  </div>
-
-                  <h3 className="text-3xl font-black text-foreground mb-4">{feature.benefit}</h3>
-                  <p className="text-xl text-foreground/90 font-semibold mb-6">{feature.impact}</p>
-
-                  <div className="pt-6 border-t border-border">
-                    <p className="text-sm text-muted-foreground font-medium">
-                      <span className="text-muted-foreground/60">Powered by:</span> {feature.hint}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {/* Additional technical hints */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6"
-        >
-          {[
-            { icon: Brain, label: 'AI Analysis' },
-            { icon: Zap, label: 'Real-time' },
-            { icon: Shield, label: 'Secure' },
-            { icon: TrendingUp, label: 'Scalable' },
-          ].map((item, index) => (
+      <div className="mt-16 space-y-20 lg:space-y-28">
+        {features.map((f, i) => (
+          <div
+            key={f.title}
+            className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
+          >
             <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.9 + index * 0.1, duration: 0.5 }}
-              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.5 }}
+              className={f.reverse ? 'lg:order-2' : ''}
             >
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-secondary mb-3">
-                <item.icon className="w-6 h-6 text-muted-foreground" />
-              </div>
-              <p className="text-sm font-semibold text-muted-foreground">{item.label}</p>
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
+                <f.Icon className="size-3.5 text-brand" />
+                {f.eyebrow}
+              </span>
+              <h3 className="font-editorial mt-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl">
+                {f.title}
+              </h3>
+              <p className="mt-4 max-w-md text-lg leading-relaxed text-muted-foreground">
+                {f.body}
+              </p>
             </motion.div>
-          ))}
-        </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+              className={f.reverse ? 'lg:order-1' : ''}
+            >
+              {f.visual}
+            </motion.div>
+          </div>
+        ))}
       </div>
     </section>
   );

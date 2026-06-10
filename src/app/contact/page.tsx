@@ -1,162 +1,131 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Building2, MessageSquare, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { Mail, Building2, MessageSquare, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export default function ContactPage() {
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSent(true);
+  };
+
   return (
-    <div
-      className="min-h-screen py-32 px-4"
-      style={{
-        background: 'linear-gradient(135deg, var(--background) 0%, var(--secondary) 50%, var(--background) 100%)',
-      }}
-    >
-      {/* Background floating shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: '10%',
-            top: '20%',
-            backgroundColor: 'rgba(255, 107, 107, 0.15)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            y: [0, -40, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '250px',
-            height: '250px',
-            right: '15%',
-            bottom: '30%',
-            backgroundColor: 'rgba(78, 205, 196, 0.15)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </div>
+    <main className="bg-dot-grid">
+      <section className="mx-auto max-w-7xl px-5 pb-24 pt-36 sm:px-8 lg:pt-44">
+        <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+          {/* Left — pitch */}
+          <div className="lg:pt-6">
+            <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+              Contact
+            </span>
+            <h1 className="font-editorial mt-4 text-5xl font-bold leading-[1.05] text-foreground sm:text-6xl">
+              Let&apos;s talk about your{' '}
+              <span className="italic text-brand">conversions</span>.
+            </h1>
+            <p className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground">
+              Running audits across a big site, multiple brands, or a team? Tell
+              us what you&apos;re working on and we&apos;ll help you get the most
+              out of LeadLens.
+            </p>
 
-      <div className="container mx-auto max-w-4xl relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter text-foreground">
-            Contact Sales
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-xl mx-auto">
-            Our team is ready to help you scale your conversion infrastructure
-          </p>
-        </motion.div>
-
-        {/* Contact Form */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-        >
-          <Card className="bg-card/80 backdrop-blur-xl border-2 border-border rounded-3xl p-8 max-w-md mx-auto shadow-2xl">
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="email" className="text-foreground/80">
-                  Work Email
-                </Label>
-                <div className="relative mt-2">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/60" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@company.com"
-                    className="pl-10 bg-secondary/50 border-border focus-visible:ring-orange-500 h-12 rounded-xl"
-                  />
+            <div className="mt-10 space-y-4">
+              {[
+                { Icon: Mail, label: 'Email', value: 'team@leadlens.app' },
+                { Icon: MessageSquare, label: 'Support', value: 'Replies within one business day' },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center gap-4">
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-secondary text-foreground">
+                    <row.Icon className="size-5" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      {row.label}
+                    </p>
+                    <p className="text-sm text-muted-foreground">{row.value}</p>
+                  </div>
                 </div>
-              </div>
-
-              <div>
-                <Label htmlFor="company-size" className="text-foreground/80">
-                  Company Size
-                </Label>
-                <div className="relative mt-2">
-                  <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground/60" />
-                  <select
-                    id="company-size"
-                    className="w-full pl-10 bg-secondary/50 border-border rounded-xl px-4 py-3 h-12 focus:outline-none focus:ring-2 focus:ring-orange-500 text-foreground"
-                  >
-                    <option>1-10</option>
-                    <option>11-50</option>
-                    <option>51-200</option>
-                    <option>201+</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="message" className="text-foreground/80">
-                  How can we help?
-                </Label>
-                <div className="relative mt-2">
-                  <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground/60" />
-                  <textarea
-                    id="message"
-                    rows={4}
-                    placeholder="Tell us about your conversion challenges..."
-                    className="w-full pl-10 bg-secondary/50 border-border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500 text-foreground resize-none"
-                  />
-                </div>
-              </div>
-
-              <Button className="w-full bg-gradient-to-r from-orange-400 via-pink-500 to-blue-500 text-white hover:opacity-90 h-12 rounded-xl font-bold text-lg shadow-lg transition-all hover:scale-105">
-                Submit Inquiry
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+              ))}
             </div>
-          </Card>
-        </motion.div>
+          </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-20 text-center"
-        >
-          <Link href="/">
-            <Button
-              variant="outline"
-              className="bg-card/80 backdrop-blur-sm border-2 border-border text-foreground/80 hover:bg-accent px-8 py-4 rounded-full font-bold transition-all hover:scale-105"
-            >
-              ← Back to Home
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
-    </div>
+          {/* Right — form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="rounded-3xl border border-border bg-card p-7 shadow-sm sm:p-8">
+              {sent ? (
+                <div className="flex flex-col items-center py-12 text-center">
+                  <span className="flex size-14 items-center justify-center rounded-full bg-brand/10 text-brand">
+                    <CheckCircle2 className="size-7" />
+                  </span>
+                  <h2 className="mt-5 text-xl font-semibold text-foreground">
+                    Thanks — we&apos;ll be in touch.
+                  </h2>
+                  <p className="mt-2 max-w-xs text-sm text-muted-foreground">
+                    Your message is on its way. Expect a reply within one
+                    business day.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Work email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/60" />
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        placeholder="you@company.com"
+                        className="pl-11"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="company-size">Company size</Label>
+                    <div className="relative">
+                      <Building2 className="absolute left-3.5 top-1/2 size-5 -translate-y-1/2 text-muted-foreground/60" />
+                      <select
+                        id="company-size"
+                        className="h-11 w-full rounded-xl border border-input bg-card pl-11 pr-4 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25"
+                      >
+                        <option>1–10</option>
+                        <option>11–50</option>
+                        <option>51–200</option>
+                        <option>201+</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">How can we help?</Label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      required
+                      placeholder="Tell us what you'd like to audit and improve…"
+                      className="w-full resize-none rounded-xl border border-input bg-card px-4 py-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/25"
+                    />
+                  </div>
+
+                  <Button type="submit" size="lg" className="w-full">
+                    Send message <ArrowRight className="size-4" />
+                  </Button>
+                </form>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </main>
   );
 }

@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShieldAlert, TrendingUp, Zap, CheckCircle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default function ResultsPage() {
+function ResultsPageContent() {
   const searchParams = useSearchParams();
   const analysisId = searchParams.get('analysisId');
   const email = searchParams.get('email');
@@ -92,7 +92,7 @@ export default function ResultsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Main Score Card */}
           <Card className="lg:col-span-1 bg-card border-border shadow-[0_0_40px_rgba(168,85,247,0.05)] rounded-3xl relative overflow-hidden group hover:border-purple-500/30 transition-colors">
-            <div className="absolute top-0 w-full h-1 bg-gradient-to-r from-purple-600 to-orange-500 opacity-50" />
+            <div className="absolute top-0 w-full h-1 bg-brand opacity-50" />
             <CardContent className="flex flex-col items-center justify-center h-full py-12">
               <p className="text-sm font-bold text-muted-foreground tracking-widest uppercase mb-6">Conversion Score</p>
               <div className="relative w-48 h-48 flex items-center justify-center mb-6">
@@ -102,7 +102,7 @@ export default function ResultsPage() {
                     cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="8" fill="transparent" strokeLinecap="round"
                     strokeDasharray={552}
                     strokeDashoffset={552 - (552 * report.scores.overall) / 100}
-                    className={report.scores.overall > 60 ? "text-orange-500" : "text-red-500"}
+                    className={report.scores.overall > 60 ? "text-brand" : "text-red-500"}
                     style={{ transition: 'stroke-dashoffset 2s ease-out' }}
                   />
                 </svg>
@@ -179,14 +179,14 @@ export default function ResultsPage() {
           <div className="space-y-6 flex flex-col">
             <Card className="bg-card border-border rounded-3xl overflow-hidden flex-1">
               <CardHeader className="bg-secondary/20 border-b border-border p-6">
-                <CardTitle className="flex items-center gap-3 text-orange-500">
+                <CardTitle className="flex items-center gap-3 text-brand">
                   <TrendingUp className="w-5 h-5" />
                   Untapped Potential
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
                 {report.lostOpportunities.map((opp: any, i: number) => (
-                  <div key={i} className="border-l-2 border-orange-500 pl-4 py-1">
+                  <div key={i} className="border-l-2 border-brand pl-4 py-1">
                     <h4 className="font-bold text-lg text-foreground">{opp.missingElement}</h4>
                     <p className="text-sm text-muted-foreground mt-1">{opp.revenueImpact}</p>
                   </div>
@@ -231,5 +231,13 @@ export default function ResultsPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResultsPageContent />
+    </Suspense>
   );
 }

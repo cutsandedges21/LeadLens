@@ -4,10 +4,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { User, Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
+export type PricingPlan = 'free' | 'starter' | 'pro' | 'enterprise'
+
 interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
+  pricingPlan: PricingPlan
   signIn: (email: string, password: string) => Promise<any>
   signUp: (email: string, password: string, metadata?: any) => Promise<any>
   signOut: () => Promise<void>
@@ -63,8 +66,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { data, error }
   }
 
+  const pricingPlan: PricingPlan =
+    (user?.user_metadata?.pricing_plan as PricingPlan) ?? 'free'
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, pricingPlan, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   )

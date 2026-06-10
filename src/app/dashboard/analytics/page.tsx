@@ -46,13 +46,14 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     if (!user) return
+    const currentUser = user
 
     async function fetchAudits() {
       try {
         const { data, error } = await supabase
           .from('analyses')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .order('created_at', { ascending: false })
 
         if (error) throw error
@@ -139,7 +140,7 @@ export default function AnalyticsPage() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin"></div>
         </div>
       </DashboardLayout>
     )
@@ -148,10 +149,10 @@ export default function AnalyticsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Analytics</h1>
-            <p className="text-slate-600">Track your optimization progress and performance</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Analytics</h1>
+            <p className="text-muted-foreground">Track your optimization progress and performance</p>
           </div>
           <div className="flex gap-2">
             {(['7d', '30d', '90d'] as const).map((range) => (
@@ -159,7 +160,7 @@ export default function AnalyticsPage() {
                 key={range}
                 variant={dateRange === range ? 'default' : 'outline'}
                 onClick={() => setDateRange(range)}
-                className={dateRange === range ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                className={dateRange === range ? 'bg-brand hover:bg-brand' : ''}
               >
                 {range === '7d' ? '7 Days' : range === '30d' ? '30 Days' : '90 Days'}
               </Button>
@@ -168,17 +169,17 @@ export default function AnalyticsPage() {
         </div>
 
         {filteredAudits.length === 0 ? (
-          <Card className="border-2 border-dashed border-slate-300">
+          <Card className="border-2 border-dashed border-border">
             <CardContent className="p-12 text-center">
-              <p className="text-xl font-semibold text-slate-700 mb-2">No Data Available</p>
-              <p className="text-slate-500 mb-6">Run some audits to see your analytics here.</p>
-              <Button className="bg-blue-600 hover:bg-blue-700">Run Your First Audit</Button>
+              <p className="text-xl font-semibold text-foreground mb-2">No Data Available</p>
+              <p className="text-muted-foreground mb-6">Run some audits to see your analytics here.</p>
+              <Button className="bg-brand hover:bg-brand">Run Your First Audit</Button>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-6">
             {/* Trend Analysis */}
-            <Card className="border-slate-200">
+            <Card className="border-border">
               <CardHeader>
                 <CardTitle>Trend Analysis</CardTitle>
               </CardHeader>
@@ -232,7 +233,7 @@ export default function AnalyticsPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Comparative Analysis */}
-              <Card className="border-slate-200">
+              <Card className="border-border">
                 <CardHeader>
                   <CardTitle>Comparative Analysis</CardTitle>
                 </CardHeader>
@@ -252,7 +253,7 @@ export default function AnalyticsPage() {
               </Card>
 
               {/* Performance Breakdown */}
-              <Card className="border-slate-200">
+              <Card className="border-border">
                 <CardHeader>
                   <CardTitle>Performance Breakdown</CardTitle>
                 </CardHeader>
@@ -264,7 +265,7 @@ export default function AnalyticsPage() {
                         cx="50%"
                         cy="50%"
                         labelLine={false}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
@@ -281,31 +282,31 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Summary Stats */}
-            <Card className="border-slate-200">
+            <Card className="border-border">
               <CardHeader>
                 <CardTitle>Summary Statistics</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                  <div className="text-center p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-600 mb-1">Overall</p>
-                    <p className="text-2xl font-bold text-slate-900">{userAverages.overall}%</p>
+                  <div className="text-center p-4 bg-background rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">Overall</p>
+                    <p className="text-2xl font-bold text-foreground">{userAverages.overall}%</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-600 mb-1">UX</p>
-                    <p className="text-2xl font-bold text-slate-900">{userAverages.ux}%</p>
+                  <div className="text-center p-4 bg-background rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">UX</p>
+                    <p className="text-2xl font-bold text-foreground">{userAverages.ux}%</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-600 mb-1">Messaging</p>
-                    <p className="text-2xl font-bold text-slate-900">{userAverages.messaging}%</p>
+                  <div className="text-center p-4 bg-background rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">Messaging</p>
+                    <p className="text-2xl font-bold text-foreground">{userAverages.messaging}%</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-600 mb-1">Trust</p>
-                    <p className="text-2xl font-bold text-slate-900">{userAverages.trust}%</p>
+                  <div className="text-center p-4 bg-background rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">Trust</p>
+                    <p className="text-2xl font-bold text-foreground">{userAverages.trust}%</p>
                   </div>
-                  <div className="text-center p-4 bg-slate-50 rounded-lg">
-                    <p className="text-sm text-slate-600 mb-1">Speed</p>
-                    <p className="text-2xl font-bold text-slate-900">{userAverages.speed}%</p>
+                  <div className="text-center p-4 bg-background rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-1">Speed</p>
+                    <p className="text-2xl font-bold text-foreground">{userAverages.speed}%</p>
                   </div>
                 </div>
               </CardContent>

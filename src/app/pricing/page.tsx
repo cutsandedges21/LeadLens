@@ -1,60 +1,71 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, ArrowRight, Zap, Shield, Headphones } from 'lucide-react';
-import Link from 'next/link';
+import { Check, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { ProtectedButton } from '@/components/ProtectedButton';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
 const tiers = [
   {
-    name: 'Starter',
-    description: 'For single founders',
+    name: 'Free',
+    description: 'For trying it out.',
     price: 0,
     planId: 'starter',
     features: [
-      '1 AI Audit per week',
-      'Basic heuristic analysis',
-      'Standard reporting',
-      'Email support',
+      '1 audit per week',
+      'Conversion score',
+      'Top 3 prioritized fixes',
+      'Web · YouTube · Instagram',
     ],
-    cta: 'Use LeadLens for free',
+    cta: 'Start free',
     popular: false,
   },
   {
     name: 'Pro',
-    description: 'For growing teams',
+    description: 'For founders shipping fast.',
     price: 28,
     planId: 'pro',
     features: [
-      'Unlimited AI Audits',
-      'Deep DOM analysis',
-      'Competitor benchmarking',
-      'Priority support',
-      'Advanced analytics',
-      'Custom reports',
+      'Unlimited audits',
+      'Full prioritized fix list',
+      'Impact estimates per fix',
+      'Audit history & tracking',
+      'Priority analysis',
     ],
     cta: 'Go Pro',
     popular: true,
   },
   {
     name: 'Max',
-    description: 'For massive scale',
+    description: 'For teams optimizing at scale.',
     price: 140,
     planId: 'enterprise',
     features: [
-      'Dedicated AI Agent',
-      'Custom reporting models',
-      'API Access',
-      'SLA guarantee',
+      'Everything in Pro',
+      'Shareable team reports',
+      'Trend analytics',
+      'API access',
       'Dedicated support',
-      'White-label options',
     ],
-    cta: 'Contact Sales',
+    cta: 'Choose Max',
     popular: false,
+  },
+];
+
+const faqs = [
+  {
+    q: 'Does LeadLens make the changes for me?',
+    a: 'No — LeadLens is diagnostic. It tells you exactly what to fix and ranks it by impact. You stay in control of what gets changed.',
+  },
+  {
+    q: 'What can I audit?',
+    a: 'Websites and landing pages first, plus YouTube channels and Instagram profiles. Paste any link and LeadLens detects the platform.',
+  },
+  {
+    q: 'Can I cancel anytime?',
+    a: 'Yes. Plans are month-to-month — upgrade, downgrade, or cancel whenever you like.',
   },
 ];
 
@@ -63,247 +74,128 @@ export default function PricingPage() {
 
   const handlePlanUpgrade = async (planId: string) => {
     if (!user || !supabase) return;
-
-    // For Starter plan (free), just redirect to dashboard without upgrading
     if (planId === 'starter') {
       window.location.href = '/dashboard';
       return;
     }
-
     try {
       const { error } = await supabase.auth.updateUser({
-        data: {
-          pricing_plan: planId,
-        },
+        data: { pricing_plan: planId },
       });
-
       if (error) throw error;
-
-      // Redirect to dashboard after successful upgrade
       window.location.href = '/dashboard';
     } catch (error) {
       console.error('Failed to upgrade plan:', error);
       alert('Failed to upgrade plan. Please try again.');
     }
   };
+
   return (
-    <div
-      className="min-h-screen py-32 px-4"
-      style={{
-        background: 'linear-gradient(135deg, var(--background) 0%, var(--secondary) 50%, var(--background) 100%)',
-      }}
-    >
-      {/* Background floating shapes */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '300px',
-            height: '300px',
-            left: '10%',
-            top: '20%',
-            backgroundColor: 'rgba(255, 107, 107, 0.15)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            y: [0, -40, 0],
-            x: [0, 30, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: '250px',
-            height: '250px',
-            right: '15%',
-            bottom: '30%',
-            backgroundColor: 'rgba(78, 205, 196, 0.15)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </div>
-
-      <div className="container mx-auto max-w-6xl relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tighter text-foreground">
-            Unlock AI Agents
+    <main className="bg-dot-grid">
+      <section className="mx-auto max-w-7xl px-5 pb-24 pt-36 sm:px-8 lg:pt-44">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+            Pricing
+          </span>
+          <h1 className="font-editorial mt-4 text-5xl font-bold leading-[1.05] text-foreground sm:text-6xl">
+            Start free. Upgrade when it{' '}
+            <span className="italic text-brand">pays for itself</span>.
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Choose your tier and let our AI systematically improve your conversion rates
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
+            One price for clarity on every page you ship. No agencies, no
+            retainers — just the fixes that matter, ranked by impact.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="mt-16 grid gap-5 lg:grid-cols-3">
           {tiers.map((tier, index) => (
             <motion.div
               key={tier.name}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.6 }}
-              className={`relative ${tier.popular
-                ? 'transform scale-105 z-10'
-                : ''
-                }`}
+              transition={{ delay: index * 0.08, duration: 0.5 }}
+              className={`relative flex flex-col rounded-3xl border bg-card p-8 shadow-sm ${
+                tier.popular ? 'border-brand ring-1 ring-brand' : 'border-border'
+              }`}
             >
               {tier.popular && (
-                <div
-                  className="absolute -top-0 top-3 left-1/2 -translate-x-1/2 text-white text-xs font-bold px-8 py-5 rounded-full uppercase tracking-widest shadow-lg animate-cycle-colors transition-transform duration-200 hover:scale-105"
-                  style={{
-                    backgroundImage: 'linear-gradient(90deg, #fb923c, #ec4899, #3b82f6, #fb923c)',
-                  }}
-                >
-                  Most Popular
-                </div>
+                <span className="absolute -top-3 left-8 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-brand-foreground">
+                  Most popular
+                </span>
               )}
+              <h3 className="text-xl font-semibold text-foreground">{tier.name}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {tier.description}
+              </p>
+              <div className="mt-5 flex items-baseline gap-1">
+                <span className="font-display text-5xl font-bold text-foreground">
+                  ${tier.price}
+                </span>
+                <span className="text-muted-foreground">/mo</span>
+              </div>
 
+              <ul className="mt-7 flex-1 space-y-3.5">
+                {tier.features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-start gap-3 text-sm text-foreground"
+                  >
+                    <Check className="mt-0.5 size-4 shrink-0 text-brand" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
 
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
-
-              <Card
-                className={`h-full backdrop-blur-xl ${tier.popular
-                  ? 'animate-border-cycle shadow-2xl z-10'
-                  : 'bg-card/80 border-2 border-border shadow-lg'
-                  } rounded-3xl p-8 transition-all hover:shadow-2xl hover:scale-105`}
-              >
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold mb-2 text-foreground">{tier.name}</h3>
-                  <p className="text-muted-foreground text-sm mb-6">{tier.description}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-foreground">${tier.price}</span>
-                    <span className="text-lg text-muted-foreground font-normal">/mo</span>
-                  </div>
-                </div>
-
-                <ul className="space-y-4 mb-8">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-sm text-foreground/80">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
+              <div className="mt-8">
                 {user ? (
                   <Button
                     onClick={() => handlePlanUpgrade(tier.planId)}
-                    className={`w-full h-12 font-bold text-lg transition-all hover:scale-105 ${tier.popular
-                      ? 'animate-cycle-colors text-white hover:opacity-90 shadow-lg'
-                      : 'bg-secondary text-foreground hover:bg-secondary/80'
-                      }`}
-                    style={tier.popular ? {
-                      backgroundImage: 'linear-gradient(90deg, #fb923c, #ec4899, #3b82f6, #fb923c)',
-                    } : undefined}
+                    variant={tier.popular ? 'brand' : 'outline'}
+                    size="lg"
+                    className="w-full"
+                    disabled={pricingPlan === tier.planId}
                   >
-                    {pricingPlan === tier.planId ? 'Current Plan' : tier.cta}
+                    {pricingPlan === tier.planId ? 'Current plan' : tier.cta}
                   </Button>
                 ) : (
                   <ProtectedButton redirectTo="/pricing">
                     <Button
-                      className={`w-full h-12 font-bold text-lg transition-all hover:scale-105 ${tier.popular
-                        ? 'animate-cycle-colors text-white hover:opacity-90 shadow-lg'
-                        : 'bg-secondary text-foreground hover:bg-secondary/80'
-                        }`}
-                      style={tier.popular ? {
-                        backgroundImage: 'linear-gradient(90deg, #fb923c, #ec4899, #3b82f6, #fb923c)',
-                      } : undefined}
+                      variant={tier.popular ? 'brand' : 'outline'}
+                      size="lg"
+                      className="w-full"
                     >
                       {tier.cta}
-                      <ArrowRight className="ml-2 w-5 h-5" />
+                      <ArrowRight className="size-4" />
                     </Button>
                   </ProtectedButton>
                 )}
-              </Card>
+              </div>
             </motion.div>
           ))}
         </div>
 
-        <br></br>
-        <br></br>
-        <br></br>
-        <br></br>
-
-
-        {/* Features Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          className="mt-20 grid md:grid-cols-3 gap-8"
-        >
-          {[
-            {
-              icon: Zap,
-              title: 'Lightning Fast',
-              description: 'Get results in under 2 minutes with our optimized AI agents',
-            },
-            {
-              icon: Shield,
-              title: 'Enterprise Security',
-              description: 'Bank-level encryption and SOC 2 Type II compliance',
-            },
-            {
-              icon: Headphones,
-              title: '24/7 Support',
-              description: 'Dedicated support team ready to help you succeed',
-            },
-          ].map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-              className="bg-card/60 backdrop-blur-sm rounded-2xl p-6 border border-border text-center"
-            >
-              <div className="w-12 h-12 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <feature.icon className="w-6 h-6 text-white" />
+        {/* FAQ */}
+        <div className="mx-auto mt-24 max-w-3xl">
+          <h2 className="font-editorial text-center text-3xl font-bold text-foreground sm:text-4xl">
+            Questions, answered.
+          </h2>
+          <div className="mt-10 space-y-4">
+            {faqs.map((faq) => (
+              <div
+                key={faq.q}
+                className="rounded-3xl border border-border bg-card p-6 shadow-sm"
+              >
+                <h3 className="text-base font-semibold text-foreground">
+                  {faq.q}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {faq.a}
+                </p>
               </div>
-              <h3 className="font-bold text-lg mb-2 text-foreground">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm">{feature.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          className="mt-20 text-center"
-        >
-          <Link href="/">
-            <Button
-              variant="outline"
-              className="bg-card/80 backdrop-blur-sm border-2 border-border text-foreground hover:bg-accent px-8 py-4 rounded-full font-bold transition-all hover:scale-105"
-            >
-              ← Back to Home
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
-    </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

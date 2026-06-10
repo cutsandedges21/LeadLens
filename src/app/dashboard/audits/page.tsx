@@ -46,13 +46,14 @@ export default function AuditsPage() {
 
   useEffect(() => {
     if (!user) return
+    const currentUser = user
 
     async function fetchAudits() {
       try {
         const { data, error } = await supabase
           .from('analyses')
           .select('*')
-          .eq('user_id', user.id)
+          .eq('user_id', currentUser.id)
           .order('created_at', { ascending: false })
 
         if (error) throw error
@@ -101,7 +102,7 @@ export default function AuditsPage() {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="w-8 h-8 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-border border-t-brand rounded-full animate-spin"></div>
         </div>
       </DashboardLayout>
     )
@@ -111,23 +112,23 @@ export default function AuditsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Audits</h1>
-          <p className="text-slate-600">View your audit history and detailed analysis</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Audits</h1>
+          <p className="text-muted-foreground">View your audit history and detailed analysis</p>
         </div>
 
         {audits.length === 0 ? (
-          <Card className="border-2 border-dashed border-slate-300">
+          <Card className="border-2 border-dashed border-border">
             <CardContent className="p-12 text-center">
-              <p className="text-xl font-semibold text-slate-700 mb-2">No Audits Yet</p>
-              <p className="text-slate-500 mb-6">Start by running your first audit to see insights here.</p>
-              <Button className="bg-blue-600 hover:bg-blue-700">Run Your First Audit</Button>
+              <p className="text-xl font-semibold text-foreground mb-2">No Audits Yet</p>
+              <p className="text-muted-foreground mb-6">Start by running your first audit to see insights here.</p>
+              <Button className="bg-brand hover:bg-brand">Run Your First Audit</Button>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left 2/3 - Growth Potential Graph */}
             <div className="lg:col-span-2">
-              <Card className="border-slate-200">
+              <Card className="border-border">
                 <CardHeader>
                   <CardTitle>Growth Potential Over Time</CardTitle>
                 </CardHeader>
@@ -181,7 +182,7 @@ export default function AuditsPage() {
 
               {/* Detailed Analysis */}
               {selectedAudit && (
-                <Card className="border-slate-200 mt-6">
+                <Card className="border-border mt-6">
                   <CardHeader>
                     <CardTitle>Detailed Analysis</CardTitle>
                   </CardHeader>
@@ -207,9 +208,9 @@ export default function AuditsPage() {
                       <h3 className="text-lg font-semibold mb-3">Lost Opportunities</h3>
                       <div className="space-y-3">
                         {selectedAudit.report.lostOpportunities.map((opp, i) => (
-                          <div key={i} className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                            <h4 className="font-medium text-orange-900 mb-2">{opp.missingElement}</h4>
-                            <p className="text-sm text-orange-700">{opp.revenueImpact}</p>
+                          <div key={i} className="p-4 bg-secondary border border-border rounded-lg">
+                            <h4 className="font-medium text-foreground mb-2">{opp.missingElement}</h4>
+                            <p className="text-sm text-muted-foreground">{opp.revenueImpact}</p>
                           </div>
                         ))}
                       </div>
@@ -221,7 +222,7 @@ export default function AuditsPage() {
                         {selectedAudit.report.actionableImprovements.map((improvement, i) => (
                           <li key={i} className="flex items-start gap-2">
                             <span className="text-green-600 mt-1">✓</span>
-                            <span className="text-sm text-slate-700">{improvement}</span>
+                            <span className="text-sm text-foreground">{improvement}</span>
                           </li>
                         ))}
                       </ul>
@@ -233,7 +234,7 @@ export default function AuditsPage() {
 
             {/* Right 1/3 - Audit Cards Grid */}
             <div className="lg:col-span-1">
-              <Card className="border-slate-200">
+              <Card className="border-border">
                 <CardHeader>
                   <CardTitle>Audit History</CardTitle>
                 </CardHeader>
@@ -245,7 +246,7 @@ export default function AuditsPage() {
                         onClick={() => setSelectedAudit(audit)}
                         className={`cursor-pointer transition-all ${
                           selectedAudit?.id === audit.id
-                            ? 'ring-2 ring-blue-500'
+                            ? 'ring-2 ring-brand'
                             : 'hover:shadow-md'
                         }`}
                       >

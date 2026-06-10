@@ -3,16 +3,16 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ProfileDisplay } from '@/components/ProfileDisplay';
+import { Brandmark, Wordmark } from '@/components/Brandmark';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
-  { number: '01', label: 'Platforms', href: '/platform' },
-  { number: '02', label: 'Solutions', href: '/solutions' },
-  { number: '03', label: 'Resources', href: '/resources' },
-  { number: '04', label: 'Pricing', href: '/pricing' },
+  { label: 'Platform', href: '/platform' },
+  { label: 'Solutions', href: '/solutions' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Resources', href: '/resources' },
 ];
 
 export function Navigation() {
@@ -21,163 +21,133 @@ export function Navigation() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 16);
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <motion.nav
-      initial={{ y: -100, opacity: 0 }}
+      initial={{ y: -24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg'
-          : 'bg-transparent'
-        }`}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'border-b border-border/70 bg-background/80 backdrop-blur-xl'
+          : 'border-b border-transparent bg-transparent'
+      }`}
     >
-      <div className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="w-10 h-10 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg"
-            >
-              LL
-            </motion.div>
-            <span className="font-bold text-2xl tracking-tight text-foreground group-hover:text-foreground/80 transition-colors">
-              LeadLens
-            </span>
-          </Link>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
+        {/* Logo */}
+        <Link href="/" className="group flex items-center gap-2.5">
+          <Brandmark className="size-9 transition-transform group-hover:-rotate-6" />
+          <Wordmark className="text-[1.35rem]" />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
+        {/* Desktop nav */}
+        <div className="hidden items-center gap-1 md:flex">
+          {navItems.map((item) => {
+            const active = pathname === item.href;
+            return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative group flex items-center gap-2 text-sm font-medium transition-colors ${pathname === item.href
+                className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                  active
                     ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground'
-                  }`}
+                }`}
               >
-                <span className="text-xs text-gray-400 group-hover:text-orange-500 transition-colors">
-                  {item.number}
-                </span>
                 {item.label}
-                <motion.div
-                  className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 via-pink-500 to-blue-500 rounded-full"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
+                {active && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-0 -z-10 rounded-full bg-accent"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
               </Link>
-            ))}
-          </div>
-
-          {/* Desktop CTA Buttons */}
-          <div className="hidden md:flex items-center gap-4">
-            <ProfileDisplay />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-foreground" />
-            ) : (
-              <Menu className="w-6 h-6 text-foreground" />
-            )}
-          </button>
+            );
+          })}
         </div>
+
+        {/* Right side */}
+        <div className="hidden md:flex">
+          <ProfileDisplay />
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setIsMobileMenuOpen((v) => !v)}
+          className="rounded-full p-2 text-foreground transition-colors hover:bg-accent md:hidden"
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+        </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 z-50 md:hidden"
           >
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <div
               onClick={() => setIsMobileMenuOpen(false)}
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              className="absolute inset-0 bg-foreground/30 backdrop-blur-sm"
             />
-
-            {/* Menu Content */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="absolute right-0 top-0 bottom-0 w-80 bg-background/95 backdrop-blur-xl shadow-2xl overflow-y-auto border-l border-border/50"
+              className="absolute right-0 top-0 bottom-0 flex w-80 max-w-[85%] flex-col border-l border-border bg-background p-6 shadow-2xl"
             >
-              <div className="p-6">
-                {/* Close Button */}
+              <div className="mb-10 flex items-center justify-between">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5"
+                >
+                  <Brandmark className="size-9" />
+                  <Wordmark />
+                </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="absolute top-6 right-6 p-2 rounded-lg hover:bg-accent transition-colors"
+                  className="rounded-full p-2 hover:bg-accent"
                   aria-label="Close menu"
                 >
-                  <X className="w-6 h-6 text-foreground" />
+                  <X className="size-6 text-foreground" />
                 </button>
+              </div>
 
-                {/* Logo */}
-                <div className="flex items-center gap-3 mb-12 mt-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-400 via-pink-500 to-blue-500 rounded-xl flex items-center justify-center font-black text-lg text-white shadow-lg">
-                    LL
-                  </div>
-                  <span className="font-bold text-xl tracking-tight text-foreground">
-                    LeadLens
-                  </span>
-                </div>
-
-                {/* Nav Items */}
-                <nav className="space-y-6">
-                  {navItems.map((item, index) => (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1, duration: 0.3 }}
+              <nav className="flex flex-col">
+                {navItems.map((item, i) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06, duration: 0.25 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="group flex items-center justify-between border-b border-border/70 py-4 font-serif text-2xl text-foreground"
                     >
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`flex items-center gap-4 text-lg font-medium transition-colors group ${pathname === item.href
-                            ? 'text-foreground'
-                            : 'text-muted-foreground hover:text-foreground'
-                          }`}
-                      >
-                        <span className="text-sm text-gray-400 group-hover:text-orange-500 transition-colors">
-                          {item.number}
-                        </span>
-                        {item.label}
-                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
-                      </Link>
-                    </motion.div>
-                  ))}
-                </nav>
+                      {item.label}
+                      <ArrowRight className="size-5 -translate-x-1 text-muted-foreground opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
 
-                {/* CTA Buttons */}
-                <div className="mt-12">
-                  <ProfileDisplay />
-                </div>
+              <div className="mt-auto pt-8">
+                <ProfileDisplay />
               </div>
             </motion.div>
           </motion.div>

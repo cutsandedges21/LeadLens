@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { useTheme } from 'next-themes'
 import { User, Mail, Building, Bell, Palette, Key, Link2, Trash2, CheckCircle2, AlertCircle, Save } from 'lucide-react'
 
 const containerVariants = {
@@ -28,6 +29,8 @@ const itemVariants = {
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null)
   const [profile, setProfile] = useState({
@@ -39,6 +42,8 @@ export default function SettingsPage() {
     notifications: true,
     email_marketing: false,
   })
+
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     if (user) {
@@ -128,11 +133,11 @@ export default function SettingsPage() {
         <div className="flex flex-col gap-2">
           <motion.h1 
             variants={itemVariants}
-            className="text-4xl font-black tracking-tight text-slate-900 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900"
+            className="text-4xl font-black tracking-tight text-foreground "
           >
             Account Settings
           </motion.h1>
-          <motion.p variants={itemVariants} className="text-slate-500 text-lg">
+          <motion.p variants={itemVariants} className="text-muted-foreground text-lg">
             Manage your personal information, preferences, and account security.
           </motion.p>
         </div>
@@ -158,10 +163,10 @@ export default function SettingsPage() {
         <div className="grid grid-cols-1 gap-8">
           {/* Profile Section */}
           <motion.div variants={itemVariants}>
-            <Card className="border-slate-200/60 shadow-sm overflow-hidden bg-white/50 backdrop-blur-sm group hover:shadow-md transition-all duration-300">
-              <CardHeader className="border-b border-slate-100 bg-slate-50/50">
+            <Card className="border-border/60 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm group hover:shadow-md transition-all duration-300">
+              <CardHeader className="border-b border-border bg-background/50">
                 <CardTitle className="flex items-center gap-2 text-xl">
-                  <User className="w-5 h-5 text-blue-600" />
+                  <User className="w-5 h-5 text-brand" />
                   Personal Information
                 </CardTitle>
                 <CardDescription>Update your profile details and how others see you.</CardDescription>
@@ -170,26 +175,26 @@ export default function SettingsPage() {
                 <form onSubmit={handleUpdateProfile} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="fullName" className="text-sm font-semibold text-slate-700">Full Name</Label>
+                      <Label htmlFor="fullName" className="text-sm font-semibold text-foreground">Full Name</Label>
                       <Input
                         id="fullName"
                         type="text"
                         value={profile.full_name}
                         onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
                         placeholder="John Doe"
-                        className="bg-white/50 border-slate-200 focus:border-blue-500 focus:ring-blue-500 transition-all"
+                        className="bg-card/50 border-border focus-visible:border-ring focus-visible:ring-ring transition-all"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-semibold text-slate-700">Email Address</Label>
+                      <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email Address</Label>
                       <div className="relative">
-                        <Input id="email" type="email" value={user?.email || ''} disabled className="bg-slate-50 border-slate-200 text-slate-500 cursor-not-allowed pl-10" />
-                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Input id="email" type="email" value={user?.email || ''} disabled className="bg-background border-border text-muted-foreground cursor-not-allowed pl-10" />
+                        <Mail className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                       </div>
-                      <p className="text-[10px] text-slate-400">Email cannot be changed directly. Contact support for assistance.</p>
+                      <p className="text-[10px] text-muted-foreground">Email cannot be changed directly. Contact support for assistance.</p>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="company" className="text-sm font-semibold text-slate-700">Company / Organization</Label>
+                      <Label htmlFor="company" className="text-sm font-semibold text-foreground">Company / Organization</Label>
                       <div className="relative">
                         <Input
                           id="company"
@@ -197,25 +202,25 @@ export default function SettingsPage() {
                           value={profile.company}
                           onChange={(e) => setProfile({ ...profile, company: e.target.value })}
                           placeholder="Acme Inc."
-                          className="bg-white/50 border-slate-200 pl-10"
+                          className="bg-card/50 border-border pl-10"
                         />
-                        <Building className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Building className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="role" className="text-sm font-semibold text-slate-700">Professional Role</Label>
+                      <Label htmlFor="role" className="text-sm font-semibold text-foreground">Professional Role</Label>
                       <Input
                         id="role"
                         type="text"
                         value={profile.role}
                         onChange={(e) => setProfile({ ...profile, role: e.target.value })}
                         placeholder="Marketing Manager"
-                        className="bg-white/50 border-slate-200"
+                        className="bg-card/50 border-border"
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end pt-4 border-t border-slate-100">
-                    <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700 text-white px-8 shadow-lg shadow-blue-200/50 transition-all group">
+                  <div className="flex justify-end pt-4 border-t border-border">
+                    <Button type="submit" disabled={loading} className="bg-brand hover:bg-brand text-white px-8 shadow-lg shadow-brand/20 transition-all group">
                       {loading ? (
                         <div className="flex items-center gap-2">
                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -236,20 +241,20 @@ export default function SettingsPage() {
 
           {/* Preferences Section */}
           <motion.div variants={itemVariants}>
-            <Card className="border-slate-200/60 shadow-sm overflow-hidden bg-white/50 backdrop-blur-sm group hover:shadow-md transition-all duration-300">
-              <CardHeader className="border-b border-slate-100 bg-slate-50/50">
+            <Card className="border-border/60 shadow-sm overflow-hidden bg-card/50 backdrop-blur-sm group hover:shadow-md transition-all duration-300">
+              <CardHeader className="border-b border-border bg-background/50">
                 <CardTitle className="flex items-center gap-2 text-xl">
-                  <Bell className="w-5 h-5 text-orange-500" />
+                  <Bell className="w-5 h-5 text-brand" />
                   Preferences
                 </CardTitle>
                 <CardDescription>Control your notification and marketing settings.</CardDescription>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-white hover:border-blue-100 hover:bg-blue-50/20 transition-all">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:border-brand/30 hover:bg-brand/10 transition-all">
                     <div>
-                      <p className="font-bold text-slate-900">Email Notifications</p>
-                      <p className="text-sm text-slate-500">Get alerts about audit completions and reports.</p>
+                      <p className="font-bold text-foreground">Email Notifications</p>
+                      <p className="text-sm text-muted-foreground">Get alerts about audit completions and reports.</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
@@ -258,14 +263,14 @@ export default function SettingsPage() {
                         onChange={(e) => setPreferences({ ...preferences, notifications: e.target.checked })}
                         className="sr-only peer" 
                       />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-secondary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring/40 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand"></div>
                     </label>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-white hover:border-blue-100 hover:bg-blue-50/20 transition-all">
+                  <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-card hover:border-brand/30 hover:bg-brand/10 transition-all">
                     <div>
-                      <p className="font-bold text-slate-900">Marketing & Updates</p>
-                      <p className="text-sm text-slate-500">Receive tips, product updates, and special offers.</p>
+                      <p className="font-bold text-foreground">Marketing & Updates</p>
+                      <p className="text-sm text-muted-foreground">Receive tips, product updates, and special offers.</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
@@ -274,12 +279,12 @@ export default function SettingsPage() {
                         onChange={(e) => setPreferences({ ...preferences, email_marketing: e.target.checked })}
                         className="sr-only peer" 
                       />
-                      <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <div className="w-11 h-6 bg-secondary peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-ring/40 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-card after:border-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand"></div>
                     </label>
                   </div>
                 </div>
-                <div className="flex justify-end pt-4 border-t border-slate-100">
-                  <Button onClick={handleUpdateProfile} disabled={loading} className="bg-slate-900 hover:bg-slate-800 text-white">
+                <div className="flex justify-end pt-4 border-t border-border">
+                  <Button onClick={handleUpdateProfile} disabled={loading} className="bg-foreground hover:bg-foreground text-white">
                     Update Preferences
                   </Button>
                 </div>
@@ -290,7 +295,7 @@ export default function SettingsPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Appearance & Security */}
             <motion.div variants={itemVariants} className="space-y-8">
-              <Card className="border-slate-200/60 shadow-sm bg-white/50 backdrop-blur-sm">
+              <Card className="border-border/60 shadow-sm bg-card/50 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Palette className="w-4 h-4 text-purple-500" />
@@ -298,17 +303,33 @@ export default function SettingsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex gap-2 p-1 bg-slate-100 rounded-lg">
-                    {['Light', 'Dark', 'System'].map((t) => (
-                      <Button key={t} variant="ghost" className="flex-1 text-xs font-bold py-1 h-8 hover:bg-white hover:shadow-sm transition-all">
-                        {t}
-                      </Button>
-                    ))}
+                  <div className="flex gap-1 p-1 bg-secondary rounded-full">
+                    {(['Light', 'Dark', 'System'] as const).map((label) => {
+                      const value = label.toLowerCase()
+                      const active = mounted && theme === value
+                      return (
+                        <Button
+                          key={label}
+                          variant="ghost"
+                          onClick={() => setTheme(value)}
+                          className={`flex-1 h-8 py-1 text-xs font-semibold transition-all ${
+                            active
+                              ? 'bg-card text-foreground shadow-sm'
+                              : 'text-muted-foreground hover:bg-card/60'
+                          }`}
+                        >
+                          {label}
+                        </Button>
+                      )
+                    })}
                   </div>
+                  <p className="mt-3 text-xs text-muted-foreground">
+                    Switch between light, dark, and system themes. Applies across LeadLens instantly.
+                  </p>
                 </CardContent>
               </Card>
 
-              <Card className="border-slate-200/60 shadow-sm bg-white/50 backdrop-blur-sm">
+              <Card className="border-border/60 shadow-sm bg-card/50 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Key className="w-4 h-4 text-amber-500" />
@@ -316,7 +337,7 @@ export default function SettingsPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full text-xs font-bold border-dashed border-2 hover:bg-slate-50 transition-all">
+                  <Button variant="outline" className="w-full text-xs font-bold border-dashed border-2 hover:bg-background transition-all">
                     Generate New API Key
                   </Button>
                 </CardContent>
@@ -325,7 +346,7 @@ export default function SettingsPage() {
 
             {/* Integrations & Danger */}
             <motion.div variants={itemVariants} className="space-y-8">
-              <Card className="border-slate-200/60 shadow-sm bg-white/50 backdrop-blur-sm">
+              <Card className="border-border/60 shadow-sm bg-card/50 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Link2 className="w-4 h-4 text-emerald-500" />
@@ -334,9 +355,9 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {['Google Analytics', 'Slack'].map((service) => (
-                    <div key={service} className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-lg group">
+                    <div key={service} className="flex items-center justify-between p-3 bg-card border border-border rounded-lg group">
                       <span className="text-sm font-medium">{service}</span>
-                      <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black uppercase tracking-wider text-blue-600 hover:bg-blue-50">
+                      <Button variant="ghost" size="sm" className="h-7 text-[10px] font-black uppercase tracking-wider text-brand hover:bg-brand/10">
                         Connect
                       </Button>
                     </div>
