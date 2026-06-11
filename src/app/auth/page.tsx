@@ -101,7 +101,7 @@ function AuthPageContent() {
 
         <div className="relative max-w-md">
           <h2 className="font-editorial text-4xl font-bold leading-tight text-background">
-            See what&apos;s costing you conversions — and exactly how to fix it.
+            See what&apos;s costing you conversions — and exactly how to fix it
           </h2>
           <p className="mt-4 text-background/70">
             Your audit is waiting. Sign in to view the full report, with every
