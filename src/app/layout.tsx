@@ -26,7 +26,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "LeadLens — See what's costing you conversions",
+  title: "LeadLens",
   description:
     "LeadLens audits your website, YouTube, or Instagram page and hands you a prioritized list of fixes, ranked by impact. You decide what to change.",
 };
