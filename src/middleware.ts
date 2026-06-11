@@ -7,8 +7,8 @@ export async function middleware(req: NextRequest) {
 
   // Create Supabase client with proper cookie handling
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
     {
       cookies: {
         get(name: string) {
@@ -24,8 +24,15 @@ export async function middleware(req: NextRequest) {
     }
   )
 
-  // Get session from Supabase
-  const { data: { session } } = await supabase.auth.getSession()
+  // Get session from Supabase (guarded so a missing/unreachable backend can't
+  // 500 the whole site — treat failures as "no session").
+  let session = null
+  try {
+    const { data } = await supabase.auth.getSession()
+    session = data.session
+  } catch {
+    session = null
+  }
 
   // Protected routes - require authentication
   const protectedPaths = ['/dashboard', '/settings']
