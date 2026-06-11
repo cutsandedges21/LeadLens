@@ -68,7 +68,7 @@ export function ScrollRoute({
     const top = Math.max(start.y, 120);
     const bottom = h - 160;
     const span = Math.max(bottom - top, 1);
-    const waves = 5;
+    const waves = 10;
     // Smooth waypoints down the page, alternating left/right of centre.
     const pts: Pt[] = [{ x: start.x, y: top }];
     for (let i = 1; i <= waves; i++) {
