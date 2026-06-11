@@ -88,7 +88,7 @@ export function HeroSection() {
             <span
               data-route-origin
               aria-hidden
-              className="ml-0.5 inline-block size-2.5 -translate-y-[0.1em] rounded-full bg-brand align-baseline sm:size-3"
+              className="ml-0.5 inline-block size-2.5 -translate-y-[0.06em] rounded-full bg-brand align-baseline sm:size-3"
             />
           </motion.h1>
 
